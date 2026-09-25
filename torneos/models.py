@@ -1,28 +1,28 @@
 from django.db import models
-from videojuegos.models import videojuego
+
 from jugadores.models import Jugador
 
 
 class Torneo(models.Model):
-    ESTADOS = [
-        ('ABIERTO', 'Abierto'),
-        ('EN_CURSO', 'En curso'),
-        ('FINALIZADO', 'Finalizado'),
-        ('CANCELADO', 'Cancelado'),
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('abierto', 'Abierto'),
+        ('en_curso', 'En curso'),
+        ('finalizado', 'Finalizado'),
+        ('cancelado', 'Cancelado'),
     ]
 
-    nombre = models.CharField(max_length=120)
+    nombre = models.CharField(max_length=200)
     videojuego = models.ForeignKey(
-        videojuego,
-        on_delete=models.PROTECT,
+        'videojuegos.Videojuego',
+        on_delete=models.CASCADE,
         related_name='torneos'
     )
-
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField()
     cupo_maximo = models.PositiveIntegerField()
-    estado = models.CharField(max_length=20, choices=ESTADOS, default='ABIERTO')
-    premio = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    premio = models.CharField(max_length=200, blank=True, null=True)
     activo = models.BooleanField(default=True)
 
     def __str__(self):
@@ -30,7 +30,7 @@ class Torneo(models.Model):
 
 
 class Inscripcion(models.Model):
-    ESTADOS = [
+    ESTADO_CHOICES = [
         ('ACTIVA', 'Activa'),
         ('RETIRADA', 'Retirada'),
         ('DESCALIFICADA', 'Descalificada'),
@@ -46,9 +46,8 @@ class Inscripcion(models.Model):
         on_delete=models.CASCADE,
         related_name='inscripciones'
     )
-
     fecha_inscripcion = models.DateTimeField(auto_now_add=True)
-    estado = models.CharField(max_length=20, choices=ESTADOS, default='ACTIVA')
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='ACTIVA')
 
     class Meta:
         constraints = [
@@ -60,5 +59,3 @@ class Inscripcion(models.Model):
 
     def __str__(self):
         return f'{self.jugador} - {self.torneo}'
-
-# Create your models here.

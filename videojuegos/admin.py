@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import videojuego
+from .models import Videojuego
 
-@admin.register(videojuego)
+@admin.register(Videojuego)
 class VideojuegoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'genero', 'plataforma', 'estado')
     list_filter = ('plataforma', 'estado')
     search_fields = ('nombre',)
-# Register your models here.
+

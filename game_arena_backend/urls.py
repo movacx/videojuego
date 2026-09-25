@@ -16,14 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView
 from rest_framework.authtoken.views import obtain_auth_token
-
+from torneos.views import estadisticas_admin_api
 
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='/api/videojuegos/', permanent=False)),
     path('admin/', admin.site.urls),
     path('api/token/', obtain_auth_token, name='api_token'),
-    path('api/videojuegos/', include('videojuegos.urls'), name='videojuegos'),
+    path('api/admin/estadisticas', estadisticas_admin_api, name='estadisticas_admin'),
+    path('api/videojuegos/', include('videojuegos.urls'), name='api_videojuegos'),
+    path('api/jugadores/', include('jugadores.urls'), name='api_jugadores'),
+    path('api/torneos/', include('torneos.urls'), name='api_torneos'),
 ]
